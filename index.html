@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Révisions CE1 ➜ CE2 – Adèle</title>
+<style>
+  :root{
+    --bg:#fffaf4; --card:#ffffff; --ink:#263238; --muted:#607d8b;
+    --pri:#4caf50; --pri-weak:#e8f5e9; --sec:#ff8a65; --sec-weak:#fff3e9; --acc:#42a5f5; --acc-weak:#e3f2fd;
+    --warn:#ffb300; --err:#e53935; --ok:#2e7d32; --radius:14px; --shadow:0 10px 24px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial;
+    background:
+      radial-gradient(1000px 1000px at 10% -10%, var(--acc-weak), transparent 50%),
+      radial-gradient(800px 800px at 110% 0%, var(--sec-weak), transparent 40%),
+      var(--bg);
+    -webkit-tap-highlight-color: transparent;
+  }
+  header{position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.1) blur(8px);
+    background:linear-gradient(#ffffffcc,#ffffffcc); border-bottom:1px solid #eee;}
+  .bar{max-width:1100px; margin:auto; padding:10px 16px; display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .logo{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px; font-size:18px}
+  .logo-badge{width:36px; height:36px; border-radius:50%; display:grid; place-items:center;
+    background:conic-gradient(from 90deg,var(--pri),var(--acc),var(--sec)); color:white; font-weight:900; box-shadow:var(--shadow)}
+  nav{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
+  .tab-btn{border:1px solid #dde4ea; background:#fff; color:#34495e; padding:8px 12px; border-radius:999px; cursor:pointer; transition:.2s; font-weight:600}
+  .tab-btn.active{background:var(--pri); border-color:var(--pri); color:white}
+  .pill{background:var(--acc-weak); color:#0b5cab; border:none}
+  .name-edit{display:flex; align-items:center; gap:8px; background:#fff; border:1px solid #dde4ea; border-radius:999px; padding:6px 10px}
+  .name-edit input{border:none; outline:none; min-width:120px; font-weight:700}
+  main{max-width:1100px; margin:22px auto; padding:0 16px 100px}
+  .screen{display:none} .screen.active{display:block; animation:fade .25s ease}
+  @keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px}
+  .card{background:var(--card); border:1px solid #edf1f5; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px}
+  .card h3{margin:0; font-size:18px}
+  .muted{color:var(--muted)} .btn{display:inline-flex; align-items:center; gap:8px; border:none; border-radius:12px; padding:10px 14px; cursor:pointer; font-weight:700; background:var(--pri); color:#fff; box-shadow:var(--shadow)}
+  .btn.secondary{background:var(--acc)} .btn.ghost{background:#fff; color:#34495e; border:1px solid #dde4ea}
+  .btn.warn{background:var(--warn); color:#1a1a1a} .btn.danger{background:var(--err)}
+  .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center} .grow{flex:1} .badge{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:var(--pri-weak); color:var(--ok); font-weight:700}
+  input[type="number"], input[type="text"], select, textarea{width:100%; padding:12px; border-radius:10px; border:1px solid #dde4ea; outline:none; font-size:16px}
+  .q{background:linear-gradient(0deg,#fff,#fff) padding-box, conic-gradient(from 180deg at 0 0, var(--acc), var(--pri), var(--sec), var(--acc)) border-box; border:2px solid transparent; border-radius:16px; padding:14px}
+  .q .title{font-weight:800; margin-bottom:8px}
+  .choices{display:grid; gap:8px; margin:10px 0}
+  .choice{border:1px solid #dde4ea; border-radius:12px; padding:12px; cursor:pointer; background:#fff; user-select:none}
+  .choice.correct{border-color:#2e7d32; background:#e8f5e9} .choice.wrong{border-color:#e53935; background:#ffebee}
+  .xpbar{height:10px; border-radius:999px; background:#edf2f7; overflow:hidden} .xpbar>i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--acc),var(--pri)); transition:width .3s}
+  .toggle{width:52px; height:30px; border-radius:999px; background:#e9eef3; position:relative; cursor:pointer; border:1px solid #d6dee6}
+  .toggle i{position:absolute; width:26px; height:26px; background:#fff; border-radius:50%; top:1px; left:1px; box-shadow:var(--shadow); transition:.2s}
+  .toggle.on{background:#c8e6c9; border-color:#c8e6c9} .toggle.on i{left:25px}
+  .lesson{background:#fff; border:1px solid #e8eef4; border-radius:12px; padding:12px} .lesson h4{margin:.2rem 0}
+  .footnote{font-size:12px; color:#78909c} .speak{background:#fff; border:1px dashed #d7e3f0; padding:8px 10px; border-radius:10px; color:#0b5cab; cursor:pointer}
+  .kudos{display:flex; gap:6px} .kudos i{width:22px; height:22px; display:grid; place-items:center; background:#fff; border:1px solid #e5ebf1; border-radius:6px}
+  .progress{height:8px; border-radius:999px; background:#edf2f7; overflow:hidden} .progress>i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--sec),var(--acc)); transition:width .2s}
+  @media (max-width:480px){ .name-edit{width:100%} nav{width:100%} }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="logo">
+      <div class="logo-badge" aria-hidden="true">A</div>
+      <div>
+        Révisions CE1 ➜ CE2
+        <div class="footnote">Français • Maths • Problèmes • Prépa CE2</div>
+      </div>
+    </div>
+
+    <div class="name-edit">
+      👧 <input id="childName" value="Adèle" aria-label="Prénom de l'enfant"/>
+      <button class="btn ghost" id="saveName">Enregistrer</button>
+      <button class="speak" id="speakConsigne">🔊 Lire la consigne</button>
+    </div>
+
+    <nav>
+      <button class="tab-btn active" data-tab="dash">Tableau de bord</button>
+      <button class="tab-btn" data-tab="fr">Français</button>
+      <button class="tab-btn" data-tab="maths">Maths</button>
+      <button class="tab-btn pill" data-tab="lessons">Leçons</button>
+      <button class="tab-btn" data-tab="ce2">Prépa CE2</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section id="dash" class="screen active">
+    <div class="cards">
+      <div class="card">
+        <h3>Bravo, <span id="helloName">Adèle</span> !</h3>
+        <div>Voici tes progrès. Fais un peu chaque jour 🏆</div>
+        <div class="row">
+          <div class="grow">
+            <div class="muted">Progression globale</div>
+            <div class="xpbar"><i id="xpbar"></i></div>
+            <div class="footnote"><span id="xpText">0</span> / 100 XP</div>
+          </div>
+          <div class="kudos" id="kudos"></div>
+        </div>
+        <div class="row">
+          <button class="btn" data-tab-jump="fr">Commencer en Français 📚</button>
+          <button class="btn secondary" data-tab-jump="maths">Aller en Maths ➗</button>
+          <button class="btn ghost" data-tab-jump="ce2">Prépa Évaluations CE2 📝</button>
+          <button class="btn ghost" id="resetProgress">🔁 Réinitialiser les progrès</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Conseil du jour</h3>
+        <div id="tip" class="muted">Lis la consigne deux fois, puis touche le bouton 🔊 pour l’entendre.</div>
+        <div class="row">
+          <div class="muted">Mode lecture automatique</div>
+          <div class="toggle" id="autoRead"><i></i></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Parents 👨‍👩‍👧</h3>
+        <div class="row">
+          <div class="grow">
+            <div class="muted">Progression par matière</div>
+            <ul id="statsList" class="muted"></ul>
+          </div>
+          <div class="grow">
+            <div class="muted">Dernières activités</div>
+            <ul id="activityLog" class="muted"></ul>
+            <button class="btn ghost" id="downloadReport">⬇️ Exporter le rapport (.json)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FRANÇAIS -->
+  <section id="fr" class="screen">
+    <div class="cards">
+      <!-- Conjugaison -->
+      <div class="card">
+        <h3>Conjugaison – Présent de l’indicatif</h3>
+        <div class="muted">Verbes CE1 (1er groupe + être/avoir/aller/faire). Écris la bonne forme.</div>
+        <div class="row">
+          <label class="muted">Verbe : </label>
+          <select id="verbSelect"></select>
+          <label class="muted">Sujet : </label>
+          <select id="subjectSelect"></select>
+          <button class="btn" id="newConj">Nouvelle question</button>
+        </div>
+        <div class="q" id="conjBox" aria-live="polite">
+          <div class="title" id="conjPrompt">—</div>
+          <div class="row">
+            <input id="conjAnswer" type="text" placeholder="Réponse ici…" autocomplete="off" />
+            <button class="btn" id="checkConj">Vérifier</button>
+          </div>
+          <div class="row">
+            <button class="btn ghost" id="conjHint">💡 Indice</button>
+            <span id="conjFeedback" class="muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compréhension -->
+      <div class="card">
+        <h3>Compréhension de texte</h3>
+        <div class="muted">Lis le petit texte puis réponds aux 3 questions.</div>
+        <div class="q">
+          <div class="lesson" id="readingText">—</div>
+          <div class="choices" id="readingChoices"></div>
+          <div class="row">
+            <button class="btn" id="newReading">Nouveau texte</button>
+            <button class="btn ghost" id="readingHint">💡 Relire un passage</button>
+            <span id="readingFeedback" class="muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orthographe courte -->
+      <div class="card">
+        <h3>Orthographe – Accords simples</h3>
+        <div class="muted">Choisis la bonne écriture.</div>
+        <div class="q">
+          <div class="title" id="orthoPrompt">—</div>
+          <div id="orthoChoices" class="choices"></div>
+          <div class="row">
+            <button class="btn" id="newOrtho">Nouvelle phrase</button>
+            <span id="orthoFeedback" class="muted"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MATHS -->
+  <section id="maths" class="screen">
+    <div class="cards">
+
+      <!-- Opérations -->
+      <div class="card">
+        <h3>Opérations rapides</h3>
+        <div class="muted">Additions et soustractions (0–99). Mode “retenue” ajusté automatiquement.</div>
+        <div class="row">
+          <select id="opType">
+            <option value="+">Addition</option>
+            <option value="-">Soustraction</option>
+          </select>
+          <label class="muted">Niveau :</label>
+          <select id="level">
+            <option value="1">Facile (0–20)</option>
+            <option value="2">Normal (0–50)</option>
+            <option value="3">CE1 max (0–99)</option>
+          </select>
+          <button class="btn" id="newOp">Nouvelle opération</button>
+        </div>
+        <div class="q">
+          <div class="title" id="opPrompt">—</div>
+          <div class="row">
+            <input id="opAnswer" type="number" inputmode="numeric" placeholder="?" />
+            <button class="btn" id="checkOp">Vérifier</button>
+            <button class="btn ghost" id="opHint">💡 Indice</button>
+          </div>
+          <div id="opFeedback" class="muted"></div>
+        </div>
+      </div>
+
+      <!-- Problèmes -->
+      <div class="card">
+        <h3>Résolution de problèmes</h3>
+        <div class="muted">Lis, choisis l’opération, puis calcule. L’explication te guide pas à pas.</div>
+        <div class="q">
+          <div class="title" id="pbText">—</div>
+          <div class="row">
+            <select id="pbOpChoice">
+              <option value="">Choisis l’opération</option>
+              <option value="+">Addition</option>
+              <option value="-">Soustraction</option>
+            </select>
+            <input id="pbAnswer" type="number" placeholder="Résultat" />
+            <button class="btn" id="checkPb">Vérifier</button>
+            <button class="btn ghost" id="pbHint">💡 Indice</button>
+          </div>
+          <div id="pbSteps" class="lesson muted"></div>
+        </div>
+        <div class="row">
+          <button class="btn secondary" id="newPb">Nouveau problème</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LEÇONS -->
+  <section id="lessons" class="screen">
+    <div class="cards">
+      <div class="card">
+        <h3>Leçons – Français</h3>
+        <div class="row"><div class="lesson grow">
+          <h4>Présent – 1er groupe (-er)</h4>
+          <ul class="muted">
+            <li>Je <b>parle</b>, tu <b>parles</b>, il/elle <b>parle</b></li>
+            <li>Nous <b>parlons</b>, vous <b>parlez</b>, ils/elles <b>parlent</b></li>
+            <li>⚠️ Pas de “-s” à <i>je</i> : je parle</li>
+          </ul>
+        </div>
+        <div class="lesson grow">
+          <h4>Être / Avoir / Aller / Faire</h4>
+          <div class="muted">
+            être: je <b>suis</b>, tu <b>es</b>, il <b>est</b>, nous <b>sommes</b>, vous <b>êtes</b>, ils <b>sont</b><br/>
+            avoir: j’<b>ai</b>, tu <b>as</b>, il <b>a</b>, nous <b>avons</b>, vous <b>avez</b>, ils <b>ont</b><br/>
+            aller: je <b>vais</b>, tu <b>vas</b>, il <b>va</b>, nous <b>allons</b>, vous <b>allez</b>, ils <b>vont</b><br/>
+            faire: je <b>fais</b>, tu <b>fais</b>, il <b>fait</b>, nous <b>faisons</b>, vous <b>faites</b>, ils <b>font</b>
+          </div>
+        </div></div>
+        <div class="row"><div class="lesson grow">
+          <h4>Futur proche</h4>
+          <div class="muted">aller + infinitif : <i>je vais jouer</i>, <i>nous allons lire</i>.</div>
+        </div>
+        <div class="lesson grow">
+          <h4>Accords simples</h4>
+          <div class="muted"><b>Le</b> chat noir / <b>Les</b> chats noir<b>s</b>. – <b>La</b> robe rouge / <b>Les</b> robes rouge<b>s</b>.</div>
+        </div></div>
+      </div>
+
+      <div class="card">
+        <h3>Leçons – Maths</h3>
+        <div class="row"><div class="lesson grow">
+          <h4>Addition posée</h4>
+          <div class="muted">Aligne unités, dizaines. Commence par la droite. Si ≥ 10, écris l’unité et mets la dizaine en retenue.</div>
+        </div>
+        <div class="lesson grow">
+          <h4>Soustraction posée</h4>
+          <div class="muted">Si tu ne peux pas, emprunte 1 dizaine (→ +10 unités).</div>
+        </div></div>
+        <div class="row"><div class="lesson grow">
+          <h4>Problèmes</h4>
+          <div class="muted">Mots indices : “en tout”, “au total” → + ; “il reste”, “perdre” → −.</div>
+        </div>
+        <div class="lesson grow">
+          <h4>Comparer des nombres</h4>
+          <div class="muted">Compare dizaines puis unités. 57 &gt; 52 car 7 &gt; 2.</div>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRÉPA CE2 -->
+  <section id="ce2" class="screen">
+    <div class="cards">
+      <div class="card">
+        <h3>Prépa Évaluations CE2 – Français & Maths</h3>
+        <div class="muted">Mode entraînement ou <b>Examen</b> (timer, sans indices). Score final sur 100 avec feedback.</div>
+        <div class="row">
+          <label class="muted">Domaine :</label>
+          <select id="ce2Domain">
+            <option value="mix">Mix (Français & Maths)</option>
+            <option value="fr">Français</option>
+            <option value="maths">Maths</option>
+          </select>
+          <label class="muted">Questions :</label>
+          <select id="ce2Count">
+            <option>10</option><option>12</option><option>15</option>
+          </select>
+          <div class="row" style="margin-left:auto">
+            <div class="muted">Mode Examen</div>
+            <div class="toggle" id="ce2Exam"><i></i></div>
+            <select id="ce2Timer" title="Durée">
+              <option value="5">5 min</option>
+              <option value="8">8 min</option>
+              <option value="10" selected>10 min</option>
+              <option value="12">12 min</option>
+              <option value="15">15 min</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn" id="ce2Start">Démarrer le test</button>
+          <button class="btn ghost" id="ce2Cancel" disabled>Annuler</button>
+        </div>
+      </div>
+
+      <div class="card" id="ce2TestCard" style="display:none">
+        <div class="row">
+          <div class="grow">
+            <div class="muted">Question <span id="ce2Idx">1</span>/<span id="ce2Total">10</span></div>
+            <div class="progress"><i id="ce2Prog"></i></div>
+          </div>
+          <div class="row">
+            <div class="badge" id="ce2Clock">⏱️ —:—</div>
+            <div class="badge" id="ce2Mode">🧪 Entraînement</div>
+          </div>
+        </div>
+
+        <div id="ce2Area" class="q" aria-live="polite"></div>
+
+        <div class="row">
+          <button class="btn" id="ce2Validate">Valider</button>
+          <button class="btn ghost" id="ce2Next" disabled>Suivante ➜</button>
+        </div>
+      </div>
+
+      <div class="card" id="ce2ResultCard" style="display:none">
+        <h3>Résultats</h3>
+        <div class="row">
+          <div class="badge">Score : <span id="ce2Score">0</span>/100</div>
+          <div class="badge">Français : <span id="ce2ScoreFr">0</span>%</div>
+          <div class="badge">Maths : <span id="ce2ScoreMa">0</span>%</div>
+        </div>
+        <div class="lesson" id="ce2Feedback"></div>
+        <div class="row">
+          <button class="btn" id="ce2Retry">Refaire un test</button>
+          <button class="btn ghost" id="ce2Back">Retour au tableau de bord</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Historique des tests</h3>
+        <ul id="ce2History" class="muted"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ===== Helpers & Storage ===== */
+const $=(q,r=document)=>r.querySelector(q); const $$=(q,r=document)=>[...r.querySelectorAll(q)];
+const say=(t)=>{ try{ const u=new SpeechSynthesisUtterance(t); u.lang='fr-FR'; u.rate=1; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){} };
+const rng=(a,b)=>Math.floor(Math.random()*(b-a+1))+a; const pick=(arr)=>arr[Math.floor(Math.random()*arr.length)];
+const shuffle=(a)=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+const store={ get(){try{return JSON.parse(localStorage.getItem('ce1ce2')||'{}')}catch(e){return{}}}, set(d){localStorage.setItem('ce1ce2',JSON.stringify(d))}, patch(p){const d=this.get(); this.set({...d,...p})}, log(e){const d=this.get(); d.log=d.log||[]; d.log.unshift({t:Date.now(),event:e}); d.log=d.log.slice(0,12); this.set(d);} };
+
+/* ===== Global State ===== */
+const state={
+  name:'Adèle', autoRead:false, xp:0,
+  stats:{fr_conj:{ok:0,total:0}, fr_read:{ok:0,total:0}, fr_ortho:{ok:0,total:0}, m_ops:{ok:0,total:0}, m_pb:{ok:0,total:0}},
+  lastTipIndex:0,
+  ce2History:[]
+};
+const tips=[
+  "Lis la consigne deux fois, puis regarde les mots importants.",
+  "En conjugaison, repère d’abord le sujet.",
+  "Pour un problème, dessine la situation.",
+  "Commence toujours par la droite en calcul posé.",
+  "Futur proche = aller + infinitif."
+];
+
+/* ===== Load / Save ===== */
+function loadState(){
+  const s=store.get(); Object.assign(state,s);
+  $('#childName').value=state.name||'Adèle'; $('#helloName').textContent=state.name||'Adèle';
+  setToggle($('#autoRead'), !!state.autoRead); renderDashboard(); renderHistory();
+}
+function saveState(){ store.patch(state); }
+
+/* ===== Tabs ===== */
+function switchTab(id){
+  $$('.screen').forEach(sc=>sc.classList.remove('active'));
+  $$('.tab-btn').forEach(b=>b.classList.remove('active'));
+  $('#'+id).classList.add('active'); $(`.tab-btn[data-tab="${id}"]`).classList.add('active');
+  if(state.autoRead){ const title={dash:"Tableau de bord",fr:"Français",maths:"Maths",lessons:"Leçons",ce2:"Prépa CE2"}[id]; say(title); }
+}
+$$('.tab-btn').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+$$('[data-tab-jump]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tabJump)));
+
+$('#saveName').addEventListener('click',()=>{ state.name=$('#childName').value.trim()||'Adèle'; $('#helloName').textContent=state.name; saveState(); renderDashboard(); });
+$('#speakConsigne').addEventListener('click',()=>{ const active=$('.screen.active'); const label=active?active.querySelector('h3')?.textContent||'Activité':'Activité'; say(`Consigne : ${label}.`); });
+function setToggle(el,on){ el.classList.toggle('on',!!on); }
+$('#autoRead').addEventListener('click',()=>{ state.autoRead=!state.autoRead; setToggle($('#autoRead'),state.autoRead); saveState(); if(state.autoRead) say("Lecture des consignes activée."); });
+
+/* ===== Dashboard / XP ===== */
+function addXP(n){ state.xp=Math.min(100,(state.xp||0)+n); saveState(); renderDashboard(); }
+function pushStat(key,ok){ const s=state.stats[key]; s.total++; if(ok) s.ok++; saveState(); renderDashboard(); }
+function renderDashboard(){
+  $('#xpbar').style.width=(state.xp||0)+'%'; $('#xpText').textContent=state.xp||0;
+  const statsList=$('#statsList'); statsList.innerHTML='';
+  for(const [k,s] of Object.entries(state.stats)){
+    const label={fr_conj:'Français – Conjugaison',fr_read:'Français – Compréhension',fr_ortho:'Français – Orthographe',m_ops:'Maths – Opérations',m_pb:'Maths – Problèmes'}[k];
+    const li=document.createElement('li'); li.textContent=`${label}: ${s.ok}/${s.total}`; statsList.appendChild(li);
+  }
+  const kudos=$('#kudos'); kudos.innerHTML=''; const stars=Math.floor((state.xp||0)/20);
+  for(let i=0;i<5;i++){ const box=document.createElement('i'); box.textContent=i<stars?'⭐':'☆'; kudos.appendChild(box); }
+  $('#tip').textContent=tips[state.lastTipIndex % tips.length];
+  const log=store.get().log||[]; const ul=$('#activityLog'); ul.innerHTML='';
+  log.forEach(l=>{ const li=document.createElement('li'); const d=new Date(l.t); li.textContent=`${d.toLocaleString('fr-FR')} – ${l.event}`; ul.appendChild(li); });
+}
+$('#resetProgress').addEventListener('click',()=>{ if(confirm("Réinitialiser la progression (XP + stats + historique CE2) ?")){ state.xp=0; state.stats={fr_conj:{ok:0,total:0}, fr_read:{ok:0,total:0}, fr_ortho:{ok:0,total:0}, m_ops:{ok:0,total:0}, m_pb:{ok:0,total:0}}; state.ce2History=[]; store.patch({xp:0,stats:state.stats,log:[],ce2History:[]}); renderDashboard(); renderHistory(); }});
+$('#downloadReport').addEventListener('click',()=>{ const data=store.get(); const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`revisions-ce1ce2-${(state.name||'eleve').toLowerCase()}.json`; a.click(); });
+
+/* ===== FR – Conjugaison ===== */
+const verbs={ parler:["parle","parles","parle","parlons","parlez","parlent"], jouer:["joue","joues","joue","jouons","jouez","jouent"], chanter:["chante","chantes","chante","chantons","chantez","chantent"], manger:["mange","manges","mange","mangeons","mangez","mangent"], aimer:["aime","aimes","aime","aimons","aimez","aiment"], être:["suis","es","est","sommes","êtes","sont"], avoir:["ai","as","a","avons","avez","ont"], aller:["vais","vas","va","allons","allez","vont"], faire:["fais","fais","fait","faisons","faites","font"] };
+const subjects=["je","tu","il/elle","nous","vous","ils/elles"];
+function populateConjSelectors(){ const vs=$('#verbSelect'); vs.innerHTML=''; Object.keys(verbs).forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; vs.appendChild(o); }); const ss=$('#subjectSelect'); ss.innerHTML=''; subjects.forEach((s,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=s; ss.appendChild(o); }); }
+populateConjSelectors();
+let currentConj=null;
+function newConjugation(){ const v=$('#verbSelect').value||pick(Object.keys(verbs)); const si=Number($('#subjectSelect').value??rng(0,5)); currentConj={v,si}; const subj=subjects[si]; $('#conjPrompt').textContent=`Conjugue au présent : ${subj} … ${v}`; $('#conjAnswer').value=''; $('#conjFeedback').textContent=''; if(state.autoRead) say(`Conjugue : ${subj} ${v}`); }
+$('#newConj').addEventListener('click',newConjugation);
+$('#checkConj').addEventListener('click',()=>{ if(!currentConj){ newConjugation(); return; } const correct=verbs[currentConj.v][currentConj.si]; const ans=$('#conjAnswer').value.trim().toLowerCase(); if(ans===correct){ $('#conjFeedback').innerHTML=`<span class="badge">✅ Bravo ! <b>${subjects[currentConj.si]} ${correct}</b></span>`; pushStat('fr_conj',true); addXP(2); store.log('fr_conj_ok'); state.lastTipIndex++; saveState(); } else { $('#conjFeedback').innerHTML=`❌ Réponse attendue : <b>${subjects[currentConj.si]} ${correct}</b>`; pushStat('fr_conj',false); store.log('fr_conj_ko'); } });
+$('#conjHint').addEventListener('click',()=>{ if(!currentConj) return; const endings=["-e","-es","-e","-ons","-ez","-ent"]; const v=currentConj.v; if(["être","avoir","aller","faire"].includes(v)){ $('#conjFeedback').textContent="Verbe très courant : essaie de le réciter dans ta tête."; } else { $('#conjFeedback').textContent=`Indice : terminaisons des verbes en -er au présent : ${endings.join(", ")}.`; } });
+
+/* ===== FR – Compréhension ===== */
+const readings=[ { text:"Léa a trouvé une petite plume bleue dans le jardin. Elle la pose dans son cahier et montre sa découverte à son frère. Ils sourient.", qs:[ {q:"Qui a trouvé la plume ?",choices:["Léa","Son frère","Le voisin"],a:0}, {q:"De quelle couleur est la plume ?",choices:["Rouge","Bleue","Verte"],a:1}, {q:"Que fait Léa avec la plume ?",choices:["Elle la jette","Elle la pose dans son cahier","Elle la perd"],a:1} ] },
+{ text:"Dans la cour de l’école, Tom observe les nuages. L’un ressemble à un bateau, un autre à un lapin. La cloche sonne et Tom rentre en classe.", qs:[ {q:"Où est Tom ?",choices:["À la maison","Dans la cour de l’école","Au parc"],a:1}, {q:"À quoi ressemble un nuage ?",choices:["À une voiture","À un bateau","À une maison"],a:1}, {q:"Que se passe-t-il à la fin ?",choices:["Il pleut","La cloche sonne","Tom s’endort"],a:1} ] },
+{ text:"Mina arrose la plante de la fenêtre tous les matins. Aujourd’hui, une petite fleur blanche est apparue. Mina est fière d’elle.", qs:[ {q:"Que fait Mina tous les matins ?",choices:["Elle danse","Elle arrose la plante","Elle lit un livre"],a:1}, {q:"De quelle couleur est la fleur ?",choices:["Jaune","Blanche","Bleue"],a:1}, {q:"Comment se sent Mina ?",choices:["Triste","Fâchée","Fière"],a:2} ] } ];
+let currentRead=null, readIndex=-1, readScore=0;
+function newReading(){ readIndex=(readIndex+1)%readings.length; currentRead=readings[readIndex]; $('#readingText').textContent=currentRead.text; $('#readingChoices').innerHTML=''; $('#readingFeedback').textContent=''; readScore=0; currentRead.qs.forEach((item,idx)=>{ const block=document.createElement('div'); block.className='lesson'; const title=document.createElement('div'); title.innerHTML=`<b>${idx+1}.</b> ${item.q}`; const choices=document.createElement('div'); choices.className='choices'; shuffle(item.choices.map((c,i)=>({c,i}))).forEach(entry=>{ const btn=document.createElement('div'); btn.className='choice'; btn.textContent=entry.c; btn.addEventListener('click',()=>{ const correctIdx=item.a; const isCorrect=item.choices[correctIdx]===entry.c; btn.classList.add(isCorrect?'correct':'wrong'); [...choices.children].forEach(ch=>ch.style.pointerEvents='none'); if(isCorrect){ readScore++; addXP(1); store.log('fr_read_q_ok'); }else{ store.log('fr_read_q_ko'); } if(readScore===currentRead.qs.length){ $('#readingFeedback').innerHTML=`<span class="badge">🎉 Parfait !</span>`; pushStat('fr_read',true); } else if([...$('.choices',block).children].every(c=>c.style.pointerEvents==='none')){ if(idx===currentRead.qs.length-1){ pushStat('fr_read', readScore===currentRead.qs.length); } } }); choices.appendChild(btn); }); block.appendChild(title); block.appendChild(choices); $('#readingChoices').appendChild(block); }); if(state.autoRead) say("Lis le texte puis réponds aux questions."); }
+$('#newReading').addEventListener('click',newReading);
+$('#readingHint').addEventListener('click',()=>{ const sentence="Repère les mots importants : personnages, lieux, actions."; $('#readingFeedback').textContent=sentence; if(state.autoRead) say(sentence); });
+
+/* ===== FR – Ortho ===== */
+const orthoPairs=[ {prompt:"Choisis la bonne phrase :",opts:["Les chats noirs jouent.","Les chat noir jouent."],a:0},
+{prompt:"Choisis la bonne phrase :",opts:["La petite fille est contente.","La petite fille est contents."],a:0},
+{prompt:"Choisis la bonne phrase :",opts:["Nous allons à l’école.","Nous allait à l’école."],a:0},
+{prompt:"Choisis la bonne phrase :",opts:["Ils ont un ballon rouge.","Ils a un ballon rouge."],a:0},
+{prompt:"Choisis la bonne phrase :",opts:["Le garçon est heureux.","Le garçon est heureuse."],a:0} ];
+let currentOrtho=null;
+function newOrtho(){ currentOrtho=pick(orthoPairs); $('#orthoPrompt').textContent=currentOrtho.prompt; const zone=$('#orthoChoices'); zone.innerHTML=''; shuffle(currentOrtho.opts.map((c,i)=>({c,i}))).forEach(entry=>{ const div=document.createElement('div'); div.className='choice'; div.textContent=entry.c; div.addEventListener('click',()=>{ const isCorrect=currentOrtho.opts[currentOrtho.a]===entry.c; div.classList.add(isCorrect?'correct':'wrong'); [...zone.children].forEach(ch=>ch.style.pointerEvents='none'); $('#orthoFeedback').textContent=isCorrect?"✅ Bien vu !":"❌ Regarde l’accord du nom et de l’adjectif."; pushStat('fr_ortho',isCorrect); if(isCorrect) addXP(1); store.log(isCorrect?'fr_ortho_ok':'fr_ortho_ko'); }); zone.appendChild(div); }); $('#orthoFeedback').textContent=''; if(state.autoRead) say("Lis bien et choisis la phrase correcte."); }
+$('#newOrtho').addEventListener('click',newOrtho);
+
+/* ===== Maths – Opérations ===== */
+let currentOp=null;
+function genOp(){ const typ=$('#opType').value; const lvl=Number($('#level').value); const cap=lvl===1?20:lvl===2?50:99; let a=rng(0,cap), b=rng(0,cap); if(typ==='-'&&b>a){[a,b]=[b,a]} currentOp={a,b,typ}; $('#opPrompt').textContent=`${a} ${typ} ${b} = ?`; $('#opAnswer').value=''; $('#opFeedback').textContent=''; if(state.autoRead) say(`Calcule ${a} ${typ} ${b}`); }
+$('#newOp').addEventListener('click',genOp);
+$('#checkOp').addEventListener('click',()=>{ if(!currentOp) return; const {a,b,typ}=currentOp; const correct=typ==='+'?a+b:a-b; const ans=Number($('#opAnswer').value); if(ans===correct){ $('#opFeedback').innerHTML=`<span class="badge">✅ Exact, ${a} ${typ} ${b} = ${correct}</span>`; pushStat('m_ops',true); addXP(2); store.log('m_ops_ok'); } else { $('#opFeedback').innerHTML=`❌ Pas tout à fait. La bonne réponse est <b>${correct}</b>.`; pushStat('m_ops',false); store.log('m_ops_ko'); } });
+$('#opHint').addEventListener('click',()=>{ if(!currentOp) return; const {a,b,typ}=currentOp; const msg=typ==='+'?`Commence par les unités : ${a%10} + ${b%10}. Y a-t-il une retenue ?`:`Commence par les unités : ${a%10} − ${b%10}. Si tu ne peux pas, emprunte 1 dizaine.`; $('#opFeedback').textContent=msg; if(state.autoRead) say(msg); });
+
+/* ===== Maths – Problèmes ===== */
+const pbModels=[ (a,b)=>({txt:`Dans une boîte, il y a ${a} billes. On en ajoute ${b}. Combien y a-t-il de billes en tout ?`,op:"+",res:a+b,steps:[`On cherche le total → addition.`,`${a} + ${b} = ${a+b}.`,`Réponse : ${a+b} billes.`]}),
+(a,b)=>({txt:`Emma lit ${a} pages le matin et ${b} pages l’après-midi. Combien de pages a-t-elle lues aujourd’hui ?`,op:"+",res:a+b,steps:[`Total dans la journée.`,`${a} + ${b} = ${a+b}.`,`Réponse : ${a+b} pages.`]}),
+(a,b)=>({txt:`Léo a ${a} autocollants. Il en donne ${b} à sa sœur. Combien lui en reste-t-il ?`,op:"-",res:a-b,steps:[`Mot indice “il reste” → soustraction.`,`${a} − ${b} = ${a-b}.`,`Réponse : ${a-b}.`]}),
+(a,b)=>({txt:`Il y a ${a} oiseaux sur la branche. ${b} s’envolent. Combien d’oiseaux restent sur la branche ?`,op:"-",res:a-b,steps:[`Des oiseaux partent → on enlève.`,`${a} − ${b} = ${a-b}.`,`Réponse : ${a-b}.`]}) ];
+let currentPb=null;
+function newPb(){ let a=rng(6,30), b=rng(2,15); if(Math.random()<.5&&b>a)[a,b]=[b,a]; const model=pick(pbModels); const pb=model(a,b); currentPb=pb; $('#pbText').textContent=pb.txt; $('#pbSteps').textContent=''; $('#pbOpChoice').value=''; $('#pbAnswer').value=''; if(state.autoRead) say("Lis le problème. Choisis l’opération, puis calcule."); }
+$('#newPb').addEventListener('click',newPb);
+$('#pbHint').addEventListener('click',()=>{ if(!currentPb) return; const msg=currentPb.op==='+'?"Cherche “en tout”, “au total”…":"Cherche “il reste”, “partir”…"; $('#pbSteps').textContent=msg; if(state.autoRead) say(msg); });
+$('#checkPb').addEventListener('click',()=>{ if(!currentPb) return; const chosen=$('#pbOpChoice').value; const ans=Number($('#pbAnswer').value); const okOp=chosen===currentPb.op; const okRes=ans===currentPb.res; const steps=currentPb.steps.map((s,i)=>`${i+1}. ${s}`).join('\n'); $('#pbSteps').innerHTML=`<pre style="white-space:pre-wrap;margin:0">${steps}</pre>`; const success=okOp&&okRes; pushStat('m_pb',success); store.log(success?'m_pb_ok':'m_pb_ko'); if(success) addXP(3); });
+
+/* ===== CE2 Prep – Test Engine ===== */
+// Bank: lightweight CE2-style items (MCQ & input)
+const ce2Bank={
+  fr:[
+    // compréhension courte (texte + 1 question)
+    {type:'read', text:"Nora range ses crayons par couleur. Elle commence par les bleus puis les verts.", q:"Que fait Nora d’abord ?", choices:["Elle range les verts","Elle commence par les bleus","Elle ne range pas"], a:1, weight:1},
+    {type:'read', text:"Au marché, Paul achète deux pommes et un pain. Il sourit au boulanger.", q:"Où est Paul ?", choices:["À l’école","Au marché","Au parc"], a:1, weight:1},
+    // grammaire / orthographe
+    {type:'mcq', q:"Choisis la phrase correcte :", choices:["Les oiseaux chante.","Les oiseaux chantent."], a:1, weight:1},
+    {type:'mcq', q:"Accord déterminant-nom :", choices:["La vélos rouge","Le vélo rouge","Les vélo rouge"], a:1, weight:1},
+    // conjugaison présent (MCQ)
+    {type:'mcq', q:"Conjugue au présent : nous … (manger)", choices:["mangeons","mangeants","mange"], a:0, weight:1},
+    {type:'mcq', q:"Conjugue au présent : ils … (aller)", choices:["allons","allez","vont"], a:2, weight:1}
+  ],
+  maths:[
+    // opérations
+    {type:'calc', q:"13 + 9 = ?", answer:22, weight:1},
+    {type:'calc', q:"47 − 18 = ?", answer:29, weight:1},
+    {type:'calc', q:"25 + 7 = ?", answer:32, weight:1},
+    // problèmes courts
+    {type:'word', txt:a=>`Il y a ${a} cartes. On en ajoute 5. Combien en tout ?`, make:()=>{const a=rng(8,20); return {q:`Il y a ${a} cartes. On en ajoute 5.`, res:a+5};}, weight:1},
+    {type:'word', txt:a=>`Lina a ${a} billes et en perd 4. Combien lui reste-t-il ?`, make:()=>{const a=rng(9,20); return {q:`Lina a ${a} billes et en perd 4.`, res:a-4};}, weight:1}
+  ]
+};
+
+// Test runtime
+let ce2Run=null, ce2TimerId=null;
+function buildTest(domain,count){
+  const items=[];
+  const add=(arr,n)=>{ const pool=shuffle(arr.slice()); for(let i=0;i<Math.min(n,pool.length);i++) items.push(pool[i]); };
+  if(domain==='fr'){ add(ce2Bank.fr, count); }
+  else if(domain==='maths'){ add(ce2Bank.maths, count); }
+  else {
+    // mix: 50/50 arrondi
+    const half=Math.floor(count/2); add(ce2Bank.fr, half); add(ce2Bank.maths, count-half);
+  }
+  // expand generated "word" items
+  const expanded = items.flatMap(it=>{
+    if(it.type==='word'){ const made=it.make(); return [{type:'calcWord', q:made.q, answer:made.res, weight:it.weight}]; }
+    return [it];
+  });
+  return shuffle(expanded);
+}
+
+function renderHistory(){
+  const ul=$('#ce2History'); ul.innerHTML='';
+  (state.ce2History||[]).forEach(h=>{
+    const li=document.createElement('li');
+    const d=new Date(h.t);
+    li.textContent=`${d.toLocaleString('fr-FR')} – ${h.mode} – ${h.domain} – ${h.score}/100 (Fr ${h.fr}%, Ma ${h.ma}%)`;
+    ul.appendChild(li);
+  });
+}
+
+function startCe2(){
+  const domain=$('#ce2Domain').value;
+  const count=parseInt($('#ce2Count').value,10);
+  const exam=$('#ce2Exam').classList.contains('on');
+  const minutes=parseInt($('#ce2Timer').value,10);
+  ce2Run={
+    domain, total:count, idx:0, answered:false, exam,
+    tLeft: minutes*60, // seconds
+    items: buildTest(domain,count),
+    score:0, fr:{ok:0,total:0}, ma:{ok:0,total:0}
+  };
+  $('#ce2Total').textContent=count; $('#ce2Idx').textContent=1;
+  $('#ce2Mode').textContent=exam?'🧪 Examen':'🧪 Entraînement';
+  $('#ce2Prog').style.width='0%';
+  $('#ce2ResultCard').style.display='none';
+  $('#ce2TestCard').style.display='';
+  $('#ce2Start').disabled=true; $('#ce2Cancel').disabled=false;
+  $('#ce2Next').disabled=true;
+  renderCe2Item();
+  if(exam){ runTimer(); } else { $('#ce2Clock').textContent='⏱️ —:—'; }
+}
+function cancelCe2(){ clearInterval(ce2TimerId); ce2TimerId=null; ce2Run=null; $('#ce2TestCard').style.display='none'; $('#ce2Start').disabled=false; $('#ce2Cancel').disabled=true; }
+function runTimer(){
+  clearInterval(ce2TimerId);
+  const tick=()=>{ if(!ce2Run) return; ce2Run.tLeft--; const m=Math.floor(ce2Run.tLeft/60), s=ce2Run.tLeft%60; $('#ce2Clock').textContent=`⏱️ ${m}:${String(s).padStart(2,'0')}`; if(ce2Run.tLeft<=0){ clearInterval(ce2TimerId); finishCe2(true); } };
+  tick(); ce2TimerId=setInterval(tick,1000);
+}
+
+function renderCe2Item(){
+  const it=ce2Run.items[ce2Run.idx];
+  const area=$('#ce2Area'); area.innerHTML='';
+  if(it.type==='read'){
+    const text=document.createElement('div'); text.className='lesson'; text.textContent=it.text; area.appendChild(text);
+    const title=document.createElement('div'); title.className='title'; title.textContent=it.q; area.appendChild(title);
+    const box=document.createElement('div'); box.className='choices';
+    shuffle(it.choices.map((c,i)=>({c,i}))).forEach(ch=>{
+      const div=document.createElement('div'); div.className='choice'; div.textContent=ch.c;
+      div.addEventListener('click',()=>{ if(ce2Run.answered) return; ce2Run.answered=true;
+        const correct=it.choices[it.a]===ch.c; markResult(div,correct,box); tally('fr',correct,it.weight); });
+      box.appendChild(div);
+    }); area.appendChild(box);
+  } else if(it.type==='mcq'){
+    const title=document.createElement('div'); title.className='title'; title.textContent=it.q; area.appendChild(title);
+    const box=document.createElement('div'); box.className='choices';
+    shuffle(it.choices.map((c,i)=>({c,i}))).forEach(ch=>{
+      const div=document.createElement('div'); div.className='choice'; div.textContent=ch.c;
+      div.addEventListener('click',()=>{ if(ce2Run.answered) return; ce2Run.answered=true;
+        const correct=it.choices[it.a]===ch.c; markResult(div,correct,box); tally('fr',correct,it.weight); });
+      box.appendChild(div);
+    }); area.appendChild(box);
+  } else if(it.type==='calc'){
+    const title=document.createElement('div'); title.className='title'; title.textContent=it.q; area.appendChild(title);
+    const row=document.createElement('div'); row.className='row';
+    const input=document.createElement('input'); input.type='number'; input.placeholder='Réponse'; input.id='ce2Input';
+    row.appendChild(input); area.appendChild(title); area.appendChild(row);
+  } else if(it.type==='calcWord'){
+    const text=document.createElement('div'); text.className='lesson'; text.textContent=it.q; area.appendChild(text);
+    const row=document.createElement('div'); row.className='row';
+    const input=document.createElement('input'); input.type='number'; input.placeholder='Résultat'; input.id='ce2Input';
+    row.appendChild(input); area.appendChild(row);
+  }
+  ce2Run.answered=false;
+}
+function markResult(div,correct,box){
+  div.classList.add(correct?'correct':'wrong'); [...box.children].forEach(c=>c.style.pointerEvents='none');
+  if(!ce2Run.exam){ // petit feedback visuel seulement en entraînement
+    const note=document.createElement('div'); note.className='muted'; note.textContent=correct?'✅ Bien joué !':'❌ Regarde bien la consigne.'; $('#ce2Area').appendChild(note);
+  }
+}
+function tally(domain,correct,weight){
+  if(domain==='fr') ce2Run.fr.total+=weight; else ce2Run.ma.total+=weight;
+  if(correct){ if(domain==='fr') ce2Run.fr.ok+=weight; else ce2Run.ma.ok+=weight; ce2Run.score += Math.round(100/ce2Run.total); addXP(2); }
+}
+function validateCe2(){
+  if(ce2Run.answered){ $('#ce2Next').disabled=false; return; }
+  // for input questions
+  const it=ce2Run.items[ce2Run.idx];
+  if(it.type==='calc'||it.type==='calcWord'){
+    const val=Number($('#ce2Input')?.value);
+    const correct=(val===it.answer);
+    if(!ce2Run.exam){
+      const fb=document.createElement('div'); fb.className='muted'; fb.textContent=correct?`✅ Correct`:`❌ Réponse : ${it.answer}`; $('#ce2Area').appendChild(fb);
+    }
+    tally('maths',correct,it.weight);
+    ce2Run.answered=true;
+    $('#ce2Next').disabled=false;
+  } else {
+    // MCQ not clicked
+    if(!ce2Run.exam){ const fb=document.createElement('div'); fb.className='muted'; fb.textContent="Choisis une réponse pour continuer."; $('#ce2Area').appendChild(fb); }
+  }
+}
+function nextCe2(){
+  ce2Run.idx++;
+  const pct=Math.round((ce2Run.idx/ce2Run.total)*100); $('#ce2Prog').style.width=pct+'%';
+  if(ce2Run.idx>=ce2Run.total){ finishCe2(false); return; }
+  $('#ce2Idx').textContent=ce2Run.idx+1; $('#ce2Next').disabled=true; renderCe2Item();
+}
+function finishCe2(timeout){
+  clearInterval(ce2TimerId); ce2TimerId=null;
+  $('#ce2TestCard').style.display='none';
+  // compute breakdown %
+  const frPct = ce2Run.fr.total ? Math.round(100*ce2Run.fr.ok/ce2Run.fr.total) : (ce2Run.domain==='maths'?0:100);
+  const maPct = ce2Run.ma.total ? Math.round(100*ce2Run.ma.ok/ce2Run.ma.total) : (ce2Run.domain==='fr'?0:100);
+  const score=Math.max(0, Math.min(100, Math.round((frPct+maPct)/2))); // lisible
+  $('#ce2Score').textContent=score; $('#ce2ScoreFr').textContent=frPct; $('#ce2ScoreMa').textContent=maPct;
+  const tips=[];
+  if(frPct<70) tips.push("📖 Renforcer : compréhension de texte (repérer personnages/lieux/actions) et accords simples.");
+  if(maPct<70) tips.push("➗ Réviser : additions/soustractions posées et mots-indices des problèmes.");
+  if(score>=85) tips.unshift("🎉 Excellent niveau, prêt·e pour l’éval !");
+  else if(score>=70) tips.unshift("👍 Bon niveau : encore un peu d’entraînement ciblé.");
+  else tips.unshift("🚀 On s’accroche : petits entraînements courts et réguliers.");
+  if(timeout) tips.push("⏱️ Gestion du temps : lis la question entière avant de répondre.");
+  $('#ce2Feedback').innerHTML=tips.map(t=>`<div>• ${t}</div>`).join('');
+  $('#ce2ResultCard').style.display='';
+  // history
+  const entry={t:Date.now(), mode:ce2Run.exam?'Examen':'Entraînement', domain:ce2Run.domain, score, fr:frPct, ma:maPct};
+  state.ce2History = [entry, ...(state.ce2History||[])].slice(0,15);
+  store.patch({ce2History:state.ce2History}); renderHistory();
+  store.log(`ce2_${ce2Run.exam?'exam':'train'}_${ce2Run.domain}_${score}`);
+  addXP(score>=70?5:2);
+  ce2Run=null; $('#ce2Start').disabled=false; $('#ce2Cancel').disabled=true;
+}
+$('#ce2Start').addEventListener('click',startCe2);
+$('#ce2Cancel').addEventListener('click',cancelCe2);
+$('#ce2Validate').addEventListener('click',validateCe2);
+$('#ce2Next').addEventListener('click',nextCe2);
+$('#ce2Retry').addEventListener('click',()=>{ $('#ce2ResultCard').style.display='none'; startCe2(); });
+$('#ce2Back').addEventListener('click',()=>switchTab('dash'));
+$('#ce2Exam').addEventListener('click',()=>setToggle($('#ce2Exam'), !$('#ce2Exam').classList.contains('on')));
+
+/* ===== Boot ===== */
+window.addEventListener('load',()=>{
+  loadState();
+  // init activities
+  newConjugation(); newReading(); newOrtho(); genOp(); newPb();
+});
+</script>
+</body>
+</html>
